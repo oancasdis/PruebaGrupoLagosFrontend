@@ -1,0 +1,73 @@
+<div class="container mt-4">
+  <h1>{{ title }}</h1>
+
+  <div class="p-3 mb-4" style="background-color: #FFF8DC; border-radius: 5px; border: 1px solid #f0e68c;">
+    <h5>Instrucciones de Uso</h5>
+    <p>
+      Esta aplicación permite buscar canciones de una banda específica en la plataforma de iTunes y administrar una lista de favoritos. A continuación, se explican los botones y funcionalidades:
+    </p>
+    <ul>
+      <li><strong>Buscar:</strong> Ingrese el nombre de una banda en el cuadro de texto y presione el botón <b>"Buscar"</b> para ver una lista de canciones de esa banda.</li>
+      <li><strong>Mostrar Favoritos:</strong> Presione el botón <b>"Mostrar Favoritos"</b> para ver una tabla con las canciones que ha marcado como favoritas previamente.</li>
+      <li><strong>Botón de Estrella:</strong> En la lista de resultados, cada canción tiene un botón en forma de estrella. Al hacer clic en la estrella, la canción se agrega a su lista de favoritos. Si la estrella está rellena, significa que la canción ya es un favorito.</li>
+    </ul>
+  </div>
+
+  <input type="text" [(ngModel)]="bandName" placeholder="Ingresa el nombre de la banda" class="form-control mb-2" />
+  <button (click)="search()" class="btn btn-primary mb-3">Buscar</button>
+  <button (click)="mostrarFavoritos()" class="btn btn-secondary mb-3">Mostrar Favoritos</button>
+
+  <div *ngIf="isLoading" class="spinner-overlay d-flex justify-content-center align-items-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Cargando...</span>
+    </div>
+  </div>
+
+  <h2 *ngIf="!isLoading && songs.length > 0">{{ titleSearch }}</h2>
+  <table *ngIf="!isLoading && songs.length > 0" class="table table-striped table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Nombre Canción</th>
+        <th>Nombre Álbum</th>
+        <th>URL Preview</th>
+        <th>Precio</th>
+        <th>Fecha de Lanzamiento</th>
+        <th>Favorito</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let song of songs">
+        <td>{{ song.nombre_tema }}</td>
+        <td>{{ song.nombre_album }}</td>
+        <td><a [href]="song.preview_url" target="_blank" class="btn btn-link">Preview</a></td>
+        <td>{{ song.precio.valor }} {{ song.precio.moneda }}</td>
+        <td>{{ song.fecha_lanzamiento | date }}</td>
+        <td>
+          <button (click)="toggleFavorite(song)" class="btn btn-sm">
+            <span [class.filled]="song.isFavorite">★</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 *ngIf="mostrarTablaFavoritos && favoritos.length > 0">{{ titleFavorite }}</h2>
+  <table *ngIf="mostrarTablaFavoritos && favoritos.length > 0" class="table table-bordered mt-4">
+    <thead>
+      <tr>
+        <th>Nombre Banda</th>
+        <th>Canción ID</th>
+        <th>Usuario</th>
+        <th>Ranking</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let favorito of favoritos">
+        <td>{{ favorito.nombre_banda }}</td>
+        <td>{{ favorito.cancion_id }}</td>
+        <td>{{ favorito.usuario }}</td>
+        <td>{{ favorito.ranking }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
